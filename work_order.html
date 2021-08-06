@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>工单管理主页</title>
+
+    <link rel="stylesheet" href="/css/ztree/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="/css/ztree/demo.css">
+    <link rel="stylesheet" href="/js/layui/css/layui.css" media="all">
+
+    <script type="text/javascript" src="/js/ztree/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="/js/ztree/jquery.ztree.all.js"></script>
+    <script type="text/javascript" src="/js/layui/layui.js"></script>
+</head>
+
+<body class="body">
+    <div style="margin: 20px auto; max-width: 1140px;">
+
+        <form class="layui-form" action="" style="...">
+            <div class="layui-inline">
+                <label class="layui-form-label">工单编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="menuName" autocomplete="off"
+                        placeholder="工单编号" class=" layui-input layui-inline">
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <label class="layui-form-label">日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="test1" placeholder="工单发起时间">
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-lg layui-btn-normal" lay-submit lay-filter="queryBtn">搜索</a>
+                <button type="reset" class="layui-btn layui-btn-lg layui-btn-normal">重置</button>
+            </div>
+        </form>
+    </div>
+    
+    <div style="margin: 40px auto; max-width: 1140px;">
+        <div class="layui-row" style="margin-left: 30px">
+            <div class="layui-col-md7">
+                <label>工单状态</label>
+                <button type="button" class="layui-btn layui-btn-normal" id="create">已发起</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="handle">维修中</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="finish">已完成</button>
+            </div>
+            <div class="layui-col-md3">
+                <button type="button" class="layui-btn layui-btn-normal" id="createWorkOrder">发起工单</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 动态表格 -->
+    <div class="my-btn-box" style="...">
+		<table id="work_order_list" lay-filter="workOrder"></table>
+    </div>
+    
+    <!-- 发起工单页面 -->
+    <div id="add-work-order" style="...">
+		<form class="layui-form" style="...">
+		
+			 <!-- 故障设备 -->
+            <div class="layui-form-item">
+                <label class="layui-form-label required" style="font-size:12px;color:#9e9e9e"  >故障设备</label>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="chooseEquipment">选择故障设备</button>
+                </div>
+            </div>
+		
+			<div class="layui-form-item">
+				<div class="layui-form-text layui-inline" style="...">工单名称</div>
+				<div class="layui-form-text layui-inline" id="add-workordername" style="..."></div>
+			</div>
+			
+			<div class="layui-form-item">
+				<div class="layui-form-text layui-inline" style="...">故障描述</div>
+				<div class="layui-form-text layui-inline" id="add-equipmentdescribe" style="..."></div>
+			</div>
+			
+			<div class="layui-form-item">
+				<div class="layui-form-label">故障类型</div>
+				<div class="layui-inline">
+					<select id="workOrderStatus">
+						<option value="">故障类型</option>
+						<option value="1">漏油</option>
+						<option value="2">油温持续过高</option>
+						<option value="3">震动过大</option>
+						<option value="4">其他</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<div class="layui-form-text layui-inline" style="...">图片</div>
+				<div class="layui-upload">
+					<button type="button" class="layui-btn" id="uploadPicture">上传图片</button>
+					<div class="layui-upload-list">
+						<img class="layui-upload-img" id="demo1">
+						<p id="demoText"></p>
+					</div>
+					<div style="width: 95px;">
+						<div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+							<div class="layui-progress-bar" lay-percent=""></div>
+						</div>
+					</div>
+				</div>   
+			</div>
+		</form>
+    </div>
+
+<script>
+    layui.use(['upload', 'laydate', 'element', 'layer'], function() {
+        let laydate = layui.laydate,
+			$ = layui.jquery,
+			upload = layui.upload,
+			element = layui.element,
+			layer = layui.layer; 
+		
+		// 选择日期
+        laydate.render({
+            elem: '#test1'
+        });
+        
+        // 上传图片
+        let uploadTnst = upload.render({
+			elem: '#uploadPicture',
+			url: 'https://httpbin.org/post', // 上传接口
+			before: function(obj) {
+				// 预览本地文件
+				obj.preview(function(index, file, reuslt) {
+					$('demo1').attr('src', result); // 图片链接（base64）
+				});
+				
+				element.progress('demo', '0%'); // 进度条复位
+				layer.msg('上传中', {icon: 16, time: 0});
+			},
+			done: function(res) {
+				// 如果上传失败
+				return layer.msg('上传失败');
+				// 上传成功
+				return layer.msg('上传成功');
+				// 置空上传失败的状态
+				$('#demoText').html('');
+			},
+			error: function() {
+				// 演示失败状态，并实现重传
+				let demoText = $('demoText');
+				demoText.html('<span style="color: 3FF5722;">上传失败</span><a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+				demoText.find('.demo-reload').on('click', function() {
+					uploadInst.upload();
+				});
+			},
+			// 进度条
+			progress: function(n, elem, e) {
+				element.progress('demo', n + '%');
+				if (n == 100) {
+					layer.msg('上传完毕', {icon: 1});
+				}
+			}
+        });
+    })
+    
+    
+</script>
+
+</body>
+</html>
