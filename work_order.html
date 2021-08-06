@@ -73,14 +73,18 @@
                 </div>
             </div>
 		
-			<div class="layui-form-item">
-				<div class="layui-form-text layui-inline" style="...">工单名称</div>
-				<div class="layui-form-text layui-inline" id="add-workordername" style="..."></div>
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">工单名称</label>
+				<div class="layui-input-block">
+					<textarea id="addWorkOrderName" placeholder="请输入内容" class="layui-textarea"></textarea>
+				</div>
 			</div>
 			
-			<div class="layui-form-item">
-				<div class="layui-form-text layui-inline" style="...">故障描述</div>
-				<div class="layui-form-text layui-inline" id="add-equipmentdescribe" style="..."></div>
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">故障描述</label>
+				<div class="layui-input-block">
+					<textarea id="addEquipmentDescribe" placeholder="请输入内容" class="layui-textarea"></textarea>
+				</div>
 			</div>
 			
 			<div class="layui-form-item">
@@ -97,7 +101,7 @@
 			</div>
 			
 			<div class="layui-form-item">
-				<div class="layui-form-text layui-inline" style="...">图片</div>
+				<div class="layui-form-label layui-inline" style="...">图片</div>
 				<div class="layui-upload">
 					<button type="button" class="layui-btn" id="uploadPicture">上传图片</button>
 					<div class="layui-upload-list">
