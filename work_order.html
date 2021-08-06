@@ -76,7 +76,7 @@
 			<div class="layui-form-item layui-form-text">
 				<label class="layui-form-label">工单名称</label>
 				<div class="layui-input-block">
-					<textarea id="addWorkOrderName" placeholder="请输入内容" class="layui-textarea"></textarea>
+					<input id="addWorkOrderName" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="工单名称" class="layui-input">
 				</div>
 			</div>
 			
@@ -90,15 +90,23 @@
 			<div class="layui-form-item">
 				<div class="layui-form-label">故障类型</div>
 				<div class="layui-inline">
-					<select id="workOrderStatus">
-						<option value="">故障类型</option>
-						<option value="1">漏油</option>
-						<option value="2">油温持续过高</option>
-						<option value="3">震动过大</option>
-						<option value="4">其他</option>
-					</select>
+					<input name="" placeholder="在输入框提供一些常用的选项" class="layui-input" id="demo2">
 				</div>
 			</div>
+			
+			//<div class="layui-form-item">
+			//	<label class="layui-form-label">单行选择框</label>
+			//	<div class="layui-input-block">
+			//		<select name="interest" lay-filter="aihao">
+			//			<option value=""></option>
+			//			<option value="0">写作</option>
+			//			<option value="1" selected="">阅读</option>
+			//			<option value="2">游戏</option>
+			//			<option value="3">音乐</option>
+			//			<option value="4">旅行</option>
+			//		</select>
+			//	</div>
+			//</div>
 			
 			<div class="layui-form-item">
 				<div class="layui-form-label layui-inline" style="...">图片</div>
@@ -119,12 +127,13 @@
     </div>
 
 <script>
-    layui.use(['upload', 'laydate', 'element', 'layer'], function() {
+    layui.use(['upload', 'laydate', 'element', 'layer', 'dropdown'], function() {
         let laydate = layui.laydate,
 			$ = layui.jquery,
 			upload = layui.upload,
 			element = layui.element,
-			layer = layui.layer; 
+			layer = layui.layer,
+			dropdown = layui.dropdown; 
 		
 		// 选择日期
         laydate.render({
@@ -155,7 +164,7 @@
 			error: function() {
 				// 演示失败状态，并实现重传
 				let demoText = $('demoText');
-				demoText.html('<span style="color: 3FF5722;">上传失败</span><a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+				demoText.html('<span style="color: #FF5722;">上传失败</span><a class="layui-btn layui-btn-xs demo-reload">重试</a>');
 				demoText.find('.demo-reload').on('click', function() {
 					uploadInst.upload();
 				});
@@ -166,6 +175,30 @@
 				if (n == 100) {
 					layer.msg('上传完毕', {icon: 1});
 				}
+			}
+        });
+        
+        // 绑定输入框
+        dropdown.render({
+			elem: '#demo2',
+			data: [{
+				title: '漏油',
+				id: 101
+			},
+			{
+				title: '油温持续过高',
+				id: 102
+			},
+			{
+				title: '震动过大',
+				id: 103
+			},
+			{
+				title: '其他'
+				id: 104
+			}],
+			click.function(obj) {
+				this.elem.val(obj.title);
 			}
         });
     })
